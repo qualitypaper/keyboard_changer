@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
+        <title>Keyboard Layout Switcher</title>
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+            body {
+                font-family: Arial, sans-serif;
+                width: 100%;
+                max-width: 100%;
+                margin: 0 auto;
+                padding: 15px;
+                font-size: 16px;
+            }
+            h1 {
+                font-size: 1.8rem;
+                text-align: center;
+                margin-bottom: 0.8rem;
+            }
+            p {
+                margin-bottom: 0.8rem;
+                line-height: 1.4;
+            }
+            textarea {
+                width: 100%;
+                height: 180px;
+                margin-bottom: 15px;
+                padding: 10px;
+                border-radius: 8px;
+                border: 1px solid #ccc;
+                font-size: 16px; /* Prevents iOS zoom on focus */
+            }
+            .button-container {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin-bottom: 15px;
+            }
+            button {
+                flex: 1 0 auto;
+                min-width: 120px;
+                padding: 12px 10px;
+                background-color: #4caf50;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 16px; /* Larger tap target */
+                touch-action: manipulation; /* Improves touch response */
+            }
+            button:hover {
+                background-color: #45a049;
+            }
+            button:active {
+                background-color: #3d8b40;
+            }
+            .info {
+                margin-top: 20px;
+                padding: 12px;
+                background-color: #f8f8f8;
+                border-left: 4px solid #4caf50;
+                border-radius: 0 8px 8px 0;
+            }
+            @media (max-width: 480px) {
+                body {
+                    padding: 10px;
+                }
+                h1 {
+                    font-size: 1.5rem;
+                }
+                button {
+                    width: 100%;
+                    margin-bottom: 8px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Keyboard Layout Switcher</h1>
+        <p>
+            Type or paste text in the box below and click the appropriate button
+            to convert between Russian and English layouts.
+        </p>
+
+        <textarea
+            id="textInput"
+            placeholder="Enter your text here..."
+        ></textarea>
+
+        <div class="button-container">
+            <button onclick="convertToEnglish()">Russian → English</button>
+            <button onclick="convertToRussian()">English → Russian</button>
+            <button onclick="clearText()">Clear</button>
+        </div>
+
+        <div class="info">
+            <p>Current layout: <span id="currentLayout">Not detected</span></p>
+            <p>
+                <strong>Note:</strong> This tool converts text between Russian
+                and English keyboard layouts. It doesn't translate the meaning.
+            </p>
+        </div>
+
+        <script>
+            // Mapping for Russian to English keyboard layout
+            const russianToEnglish = {
+                й: "q",
+                ц: "w",
+                у: "e",
+                к: "r",
+                е: "t",
+                н: "y",
+                г: "u",
+                ш: "i",
+                щ: "o",
+                з: "p",
+                х: "[",
+                ъ: "]",
+                ф: "a",
+                ы: "s",
+                в: "d",
+                а: "f",
+                п: "g",
+                р: "h",
+                о: "j",
+                л: "k",
+                д: "l",
+                ж: ";",
+                э: "'",
+                я: "z",
+                ч: "x",
+                с: "c",
+                м: "v",
+                и: "b",
+                т: "n",
+                ь: "m",
+                б: ",",
+                ю: ".",
+                ".": "/",
+                ",": "/",
+                Й: "Q",
+                Ц: "W",
+                У: "E",
+                К: "R",
+                Е: "T",
+                Н: "Y",
+                Г: "U",
+                Ш: "I",
+                Щ: "O",
+                З: "P",
+                Х: "{",
+                Ъ: "}",
+                Ф: "A",
+                Ы: "S",
+                В: "D",
+                А: "F",
+                П: "G",
+                Р: "H",
+                О: "J",
+                Л: "K",
+                Д: "L",
+                Ж: ":",
+                Э: '"',
+                Я: "Z",
+                Ч: "X",
+                С: "C",
+                М: "V",
+                И: "B",
+                Т: "N",
+                Ь: "M",
+                Б: "<",
+                Ю: ">",
+                "?": "?",
+                ё: "`",
+                Ё: "~",
+            };
+
+            // Mapping for English to Russian keyboard layout
+            const englishToRussian = {};
+            for (let key in russianToEnglish) {
+                englishToRussian[russianToEnglish[key]] = key;
+            }
+
+            // Function to convert from Russian to English
+            function convertToEnglish() {
+                const text = document.getElementById("textInput").value;
+                let result = "";
+
+                for (let i = 0; i < text.length; i++) {
+                    const char = text[i];
+                    result += russianToEnglish[char] || char;
+                }
+
+                document.getElementById("textInput").value = result;
+                document.getElementById("currentLayout").textContent =
+                    "English";
+            }
+
+            // Function to convert from English to Russian
+            function convertToRussian() {
+                const text = document.getElementById("textInput").value;
+                let result = "";
+
+                for (let i = 0; i < text.length; i++) {
+                    const char = text[i];
+                    result += englishToRussian[char] || char;
+                }
+
+                document.getElementById("textInput").value = result;
+                document.getElementById("currentLayout").textContent =
+                    "Russian";
+            }
+
+            // Function to clear the text area
+            function clearText() {
+                document.getElementById("textInput").value = "";
+                document.getElementById("currentLayout").textContent =
+                    "Not detected";
+            }
+
+            // Auto-detect layout based on input
+            document
+                .getElementById("textInput")
+                .addEventListener("input", function () {
+                    const text = this.value;
+                    if (text.length > 0) {
+                        let russianChars = 0;
+                        let englishChars = 0;
+
+                        for (let i = 0; i < text.length; i++) {
+                            if (/[а-яА-ЯёЁ]/.test(text[i])) {
+                                russianChars++;
+                            } else if (/[a-zA-Z]/.test(text[i])) {
+                                englishChars++;
+                            }
+                        }
+
+                        if (russianChars > englishChars) {
+                            document.getElementById(
+                                "currentLayout",
+                            ).textContent = "Russian";
+                        } else if (englishChars > russianChars) {
+                            document.getElementById(
+                                "currentLayout",
+                            ).textContent = "English";
+                        } else {
+                            document.getElementById(
+                                "currentLayout",
+                            ).textContent = "Mixed or not detected";
+                        }
+                    } else {
+                        document.getElementById("currentLayout").textContent =
+                            "Not detected";
+                    }
+                });
+        </script>
+    </body>
+</html>
