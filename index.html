@@ -98,6 +98,7 @@
             <button onclick="convertToEnglish()">Russian → English</button>
             <button onclick="convertToRussian()">English → Russian</button>
             <button onclick="clearText()">Clear</button>
+            <button onclick="copyText()">Copy</button>
         </div>
 
         <div class="info">
@@ -188,8 +189,8 @@
                 englishToRussian[russianToEnglish[key]] = key;
             }
 
-            // Function to convert from Russian to English
-            function convertToEnglish() {
+            // Make functions globally available
+            window.convertToEnglish = function () {
                 const text = document.getElementById("textInput").value;
                 let result = "";
 
@@ -201,10 +202,9 @@
                 document.getElementById("textInput").value = result;
                 document.getElementById("currentLayout").textContent =
                     "English";
-            }
+            };
 
-            // Function to convert from English to Russian
-            function convertToRussian() {
+            window.convertToRussian = function () {
                 const text = document.getElementById("textInput").value;
                 let result = "";
 
@@ -216,14 +216,18 @@
                 document.getElementById("textInput").value = result;
                 document.getElementById("currentLayout").textContent =
                     "Russian";
-            }
+            };
 
-            // Function to clear the text area
-            function clearText() {
+            window.copyText = function () {
+                const value = document.getElementById("textInput").value;
+                navigator.clipboard.writeText(value);
+            };
+
+            window.clearText = function () {
                 document.getElementById("textInput").value = "";
                 document.getElementById("currentLayout").textContent =
                     "Not detected";
-            }
+            };
 
             // Auto-detect layout based on input
             document
